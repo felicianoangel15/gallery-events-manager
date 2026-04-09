@@ -1,7 +1,5 @@
-This folder is included to match the requested final project structure.
+This folder is empty on purpose.
 
-The actual rendered frontend files for the Flask app live in:
+The app uses:
 - `backend/templates/`
 - `backend/static/`
-
-That layout keeps the Jinja templates and static assets in the standard Flask structure.

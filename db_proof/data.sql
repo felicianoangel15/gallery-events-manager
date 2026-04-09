@@ -16,7 +16,8 @@ INSERT INTO tickets (event_id, attendee_id, ticket_type, privilege, origin, stat
 (1, 2, 'General', 'Standard access', 'Walk-in', 'Used'),
 (2, 3, 'Student', 'Student discount', 'Online', 'Active'),
 (4, 4, 'VIP', 'Artist meet-and-greet', 'Sponsor list', 'Active'),
-(4, 5, 'General', NULL, 'Online', 'Cancelled');
+(4, 5, 'General', NULL, 'Online', 'Cancelled'),
+(2, 2, 'General', 'Standard access', 'Walk-in', 'Active');
 
 INSERT INTO purchases (ticket_id, purchase_date, payment_method, amount_paid) VALUES
 (1, '2026-03-20', 'Card', 20.00),

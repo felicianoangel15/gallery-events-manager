@@ -18,7 +18,7 @@ from validators import (
 main_bp = Blueprint("main", __name__)
 
 
-def format_datetime_for_input(value):
+def format_datetime_input(value):
     if not value:
         return ""
     if isinstance(value, str):
@@ -134,21 +134,21 @@ def events():
 @main_bp.route("/events/add", methods=["POST"])
 def add_event():
     try:
-        payload = validate_event_form(request.form)
+        data = validate_event_form(request.form)
         execute_commit(
             """
             INSERT INTO events (event_name, event_location, event_time, capacity, ticket_price)
             VALUES (%s, %s, %s, %s, %s)
             """,
             (
-                payload["event_name"],
-                payload["event_location"],
-                payload["event_time"],
-                payload["capacity"],
-                payload["ticket_price"],
+                data["event_name"],
+                data["event_location"],
+                data["event_time"],
+                data["capacity"],
+                data["ticket_price"],
             ),
         )
-        flash("Event added successfully.", "success")
+        flash("Event added.", "success")
         return redirect(url_for("main.events"))
     except ValueError as exc:
         flash(str(exc), "error")
@@ -181,7 +181,7 @@ def edit_event(event_id):
 
     if request.method == "POST":
         try:
-            payload = validate_event_form(request.form)
+            data = validate_event_form(request.form)
             execute_commit(
                 """
                 UPDATE events
@@ -193,15 +193,15 @@ def edit_event(event_id):
                 WHERE event_id = %s
                 """,
                 (
-                    payload["event_name"],
-                    payload["event_location"],
-                    payload["event_time"],
-                    payload["capacity"],
-                    payload["ticket_price"],
+                    data["event_name"],
+                    data["event_location"],
+                    data["event_time"],
+                    data["capacity"],
+                    data["ticket_price"],
                     event_id,
                 ),
             )
-            flash("Event updated successfully.", "success")
+            flash("Event updated.", "success")
             return redirect(url_for("main.events"))
         except ValueError as exc:
             flash(str(exc), "error")
@@ -209,7 +209,7 @@ def edit_event(event_id):
             flash(f"Database error: {exc.pgerror or str(exc)}", "error")
             event.update(request.form)
 
-    event["event_time_form"] = format_datetime_for_input(event["event_time"])
+    event["event_time_form"] = format_datetime_input(event["event_time"])
     return render_template("event_form.html", event=event)
 
 
@@ -217,9 +217,9 @@ def edit_event(event_id):
 def delete_event(event_id):
     try:
         execute_commit("DELETE FROM events WHERE event_id = %s", (event_id,))
-        flash("Event deleted successfully.", "success")
+        flash("Event deleted.", "success")
     except psycopg2.Error:
-        flash("Event could not be deleted because related records still exist.", "error")
+        flash("Can't delete that event while related records still exist.", "error")
     return redirect(url_for("main.events"))
 
 
@@ -238,15 +238,15 @@ def attendees():
 @main_bp.route("/attendees/add", methods=["POST"])
 def add_attendee():
     try:
-        payload = validate_attendee_form(request.form)
+        data = validate_attendee_form(request.form)
         execute_commit(
             """
             INSERT INTO attendees (full_name, email, phone)
             VALUES (%s, %s, %s)
             """,
-            (payload["full_name"], payload["email"], payload["phone"]),
+            (data["full_name"], data["email"], data["phone"]),
         )
-        flash("Attendee added successfully.", "success")
+        flash("Attendee added.", "success")
         return redirect(url_for("main.attendees"))
     except ValueError as exc:
         flash(str(exc), "error")
@@ -298,7 +298,7 @@ def tickets():
 @main_bp.route("/tickets/add", methods=["POST"])
 def add_ticket():
     try:
-        payload = validate_ticket_form(request.form)
+        data = validate_ticket_form(request.form)
         execute_commit(
             """
             INSERT INTO tickets (
@@ -312,15 +312,15 @@ def add_ticket():
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
             (
-                payload["event_id"],
-                payload["attendee_id"],
-                payload["ticket_type"],
-                payload["privilege"],
-                payload["origin"],
-                payload["status"],
+                data["event_id"],
+                data["attendee_id"],
+                data["ticket_type"],
+                data["privilege"],
+                data["origin"],
+                data["status"],
             ),
         )
-        flash("Ticket created successfully.", "success")
+        flash("Ticket added.", "success")
         return redirect(url_for("main.tickets"))
     except ValueError as exc:
         flash(str(exc), "error")
@@ -385,20 +385,20 @@ def purchases():
 @main_bp.route("/purchases/add", methods=["POST"])
 def add_purchase():
     try:
-        payload = validate_purchase_form(request.form)
+        data = validate_purchase_form(request.form)
         execute_commit(
             """
             INSERT INTO purchases (ticket_id, purchase_date, payment_method, amount_paid)
             VALUES (%s, %s, %s, %s)
             """,
             (
-                payload["ticket_id"],
-                payload["purchase_date"],
-                payload["payment_method"],
-                payload["amount_paid"],
+                data["ticket_id"],
+                data["purchase_date"],
+                data["payment_method"],
+                data["amount_paid"],
             ),
         )
-        flash("Purchase recorded successfully.", "success")
+        flash("Purchase added.", "success")
         return redirect(url_for("main.purchases"))
     except ValueError as exc:
         flash(str(exc), "error")

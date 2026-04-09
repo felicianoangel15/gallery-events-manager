@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Events</p>
+        <h1>Edit event #{{ event.event_id }}</h1>
+    </div>
+</section>
+
+<section class="panel single-panel">
+    <form method="post" action="{{ url_for('main.edit_event', event_id=event.event_id) }}" class="form-grid">
+        <label>
+            Event name
+            <input type="text" name="event_name" value="{{ request.form.get('event_name', event.event_name) }}" required>
+        </label>
+        <label>
+            Location
+            <input type="text" name="event_location" value="{{ request.form.get('event_location', event.event_location) }}" required>
+        </label>
+        <label>
+            Event time
+            <input type="datetime-local" name="event_time" value="{{ request.form.get('event_time', event.event_time_form) }}" required>
+        </label>
+        <label>
+            Capacity
+            <input type="number" name="capacity" min="0" value="{{ request.form.get('capacity', event.capacity) }}" required>
+        </label>
+        <label>
+            Ticket price
+            <input type="number" name="ticket_price" min="0" step="0.01" value="{{ request.form.get('ticket_price', event.ticket_price) }}" required>
+        </label>
+        <div class="button-row">
+            <button type="submit">Save changes</button>
+            <a class="button-link muted-link" href="{{ url_for('main.events') }}">Back to events</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

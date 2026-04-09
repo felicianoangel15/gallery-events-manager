@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Reports</p>
+        <h1>SQL query results and database view</h1>
+    </div>
+</section>
+
+<section class="report-grid">
+    <article class="panel">
+        <h2>Upcoming Events (SELECT with WHERE + ORDER BY)</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.upcoming_events %}
+                    <tr>
+                        <td>{{ row.event_id }}</td>
+                        <td>{{ row.event_name }}</td>
+                        <td>{{ row.event_location }}</td>
+                        <td>{{ row.event_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>Ticket Details (JOIN)</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Event</th>
+                        <th>Attendee</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.ticket_details %}
+                    <tr>
+                        <td>{{ row.ticket_id }}</td>
+                        <td>{{ row.event_name }}</td>
+                        <td>{{ row.full_name }}</td>
+                        <td>{{ row.ticket_type }}</td>
+                        <td>{{ row.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>Tickets by Event (GROUP BY)</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Total Tickets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.ticket_counts %}
+                    <tr>
+                        <td>{{ row.event_name }}</td>
+                        <td>{{ row.total_tickets }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="2">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>VIP Attendees</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Event</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.vip_attendees %}
+                    <tr>
+                        <td>{{ row.full_name }}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.event_name }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>Revenue by Event</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.revenue_by_event %}
+                    <tr>
+                        <td>{{ row.event_name }}</td>
+                        <td>${{ "%.2f"|format(row.total_revenue) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="2">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>View: event_ticket_summary</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event</th>
+                        <th>Total</th>
+                        <th>Active</th>
+                        <th>VIP</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.summary_view %}
+                    <tr>
+                        <td>{{ row.event_id }}</td>
+                        <td>{{ row.event_name }}</td>
+                        <td>{{ row.total_tickets }}</td>
+                        <td>{{ row.active_tickets }}</td>
+                        <td>{{ row.vip_tickets }}</td>
+                        <td>${{ "%.2f"|format(row.total_revenue) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>Above-Average Revenue Events (Subquery)</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.above_average_revenue %}
+                    <tr>
+                        <td>{{ row.event_name }}</td>
+                        <td>${{ "%.2f"|format(row.total_revenue) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="2">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <h2>Active Tickets Only</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Event ID</th>
+                        <th>Attendee ID</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in reports.active_tickets_only %}
+                    <tr>
+                        <td>{{ row.ticket_id }}</td>
+                        <td>{{ row.event_id }}</td>
+                        <td>{{ row.attendee_id }}</td>
+                        <td>{{ row.ticket_type }}</td>
+                        <td>{{ row.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5">0 rows</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

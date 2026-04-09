@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-panel">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Track events, attendees, tickets, and purchases</h1>
+        <p class="hero-copy">
+            This reference app shows a complete relational database workflow using PostgreSQL,
+            raw SQL, server-side validation, a view, and a trigger.
+        </p>
+    </div>
+</section>
+
+<section class="card-grid">
+    <article class="metric-card">
+        <h2>{{ metrics.event_count }}</h2>
+        <p>Total events</p>
+    </article>
+    <article class="metric-card">
+        <h2>{{ metrics.attendee_count }}</h2>
+        <p>Total attendees</p>
+    </article>
+    <article class="metric-card">
+        <h2>{{ metrics.ticket_count }}</h2>
+        <p>Total tickets</p>
+    </article>
+    <article class="metric-card">
+        <h2>${{ "%.2f"|format(metrics.total_revenue) }}</h2>
+        <p>Total revenue</p>
+    </article>
+</section>
+
+<section class="two-column">
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Upcoming Events</h2>
+            <a class="button-link" href="{{ url_for('main.events') }}">Manage events</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in upcoming_events %}
+                    <tr>
+                        <td>{{ event.event_name }}</td>
+                        <td>{{ event.event_location }}</td>
+                        <td>{{ event.event_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No upcoming events found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="panel-header">
+            <h2>Recent Purchases</h2>
+            <a class="button-link" href="{{ url_for('main.purchases') }}">View purchases</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Attendee</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in recent_purchases %}
+                    <tr>
+                        <td>{{ purchase.purchase_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ purchase.event_name }}</td>
+                        <td>{{ purchase.full_name }}</td>
+                        <td>${{ "%.2f"|format(purchase.amount_paid) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No purchases recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Events Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="brand-block">
+            <a href="{{ url_for('main.dashboard') }}" class="brand">Gallery Events Manager</a>
+            <p class="brand-subtitle">Flask + PostgreSQL student database project</p>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('main.events') }}">Events</a>
+            <a href="{{ url_for('main.attendees') }}">Attendees</a>
+            <a href="{{ url_for('main.tickets') }}">Tickets</a>
+            <a href="{{ url_for('main.purchases') }}">Purchases</a>
+            <a href="{{ url_for('main.reports') }}">Reports</a>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <section class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

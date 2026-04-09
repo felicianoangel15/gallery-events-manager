@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Tickets</p>
+        <h1>Create and review tickets</h1>
+    </div>
+</section>
+
+<section class="two-column">
+    <article class="panel">
+        <h2>Create Ticket</h2>
+        <form method="post" action="{{ url_for('main.add_ticket') }}" class="form-grid">
+            <label>
+                Event
+                <select name="event_id" required>
+                    <option value="">Select event</option>
+                    {% for event in events %}
+                    <option value="{{ event.event_id }}" {% if form_data.get('event_id') == event.event_id|string %}selected{% endif %}>
+                        {{ event.event_name }} ({{ event.event_time.strftime('%Y-%m-%d') }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Attendee
+                <select name="attendee_id" required>
+                    <option value="">Select attendee</option>
+                    {% for attendee in attendees %}
+                    <option value="{{ attendee.attendee_id }}" {% if form_data.get('attendee_id') == attendee.attendee_id|string %}selected{% endif %}>
+                        {{ attendee.full_name }} ({{ attendee.email }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Ticket type
+                <select name="ticket_type" required>
+                    <option value="">Select type</option>
+                    {% for ticket_type in ticket_types %}
+                    <option value="{{ ticket_type }}" {% if form_data.get('ticket_type') == ticket_type %}selected{% endif %}>{{ ticket_type }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Privilege
+                <input type="text" name="privilege" value="{{ form_data.get('privilege', '') }}" placeholder="Optional note">
+            </label>
+            <label>
+                Origin
+                <input type="text" name="origin" value="{{ form_data.get('origin', '') }}" placeholder="Online, walk-in, sponsor...">
+            </label>
+            <label>
+                Status
+                <select name="status" required>
+                    <option value="">Select status</option>
+                    {% for status in statuses %}
+                    <option value="{{ status }}" {% if form_data.get('status') == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button type="submit">Create ticket</button>
+        </form>
+    </article>
+
+    <article class="panel">
+        <h2>Ticket List</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event</th>
+                        <th>Attendee</th>
+                        <th>Type</th>
+                        <th>Privilege</th>
+                        <th>Origin</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.ticket_id }}</td>
+                        <td>{{ ticket.event_name }}</td>
+                        <td>{{ ticket.full_name }}</td>
+                        <td>{{ ticket.ticket_type }}</td>
+                        <td>{{ ticket.privilege or 'NULL' }}</td>
+                        <td>{{ ticket.origin or 'NULL' }}</td>
+                        <td>{{ ticket.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7">No tickets found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

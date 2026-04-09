@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Attendees</p>
+        <h1>Manage attendees</h1>
+    </div>
+</section>
+
+<section class="two-column">
+    <article class="panel">
+        <h2>Add Attendee</h2>
+        <form method="post" action="{{ url_for('main.add_attendee') }}" class="form-grid">
+            <label>
+                Full name
+                <input type="text" name="full_name" value="{{ form_data.get('full_name', '') }}" required>
+            </label>
+            <label>
+                Email
+                <input type="email" name="email" value="{{ form_data.get('email', '') }}" required>
+            </label>
+            <label>
+                Phone
+                <input type="text" name="phone" value="{{ form_data.get('phone', '') }}">
+            </label>
+            <button type="submit">Add attendee</button>
+        </form>
+    </article>
+
+    <article class="panel">
+        <h2>Attendee List</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in attendees %}
+                    <tr>
+                        <td>{{ attendee.attendee_id }}</td>
+                        <td>{{ attendee.full_name }}</td>
+                        <td>{{ attendee.email }}</td>
+                        <td>{{ attendee.phone or 'NULL' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No attendees found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

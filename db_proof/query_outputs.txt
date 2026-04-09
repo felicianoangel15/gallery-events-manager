@@ -1,0 +1,78 @@
+Gallery Events Manager sample query outputs
+Based on running schema.sql followed by data.sql
+Sample time assumption for Query 1: current timestamp is 2026-04-08
+
+Query 1: Basic SELECT with WHERE and ORDER BY
+Columns: event_id | event_name | event_location | event_time
+4 | Alumni Curator Talk | Museum Lecture Room | 2026-04-12 14:00:00
+3 | Photography Open House | Campus Art Annex | 2026-04-20 17:00:00
+1 | Spring Student Showcase | Downtown Gallery Hall | 2026-05-15 18:00:00
+2 | Sculpture Night | Riverside Exhibit Loft | 2026-06-01 19:30:00
+Total rows: 4
+
+Query 2: JOIN across multiple tables
+Columns: ticket_id | event_name | full_name | ticket_type | status
+5 | Alumni Curator Talk | Ava Johnson | General | Cancelled
+4 | Alumni Curator Talk | Leo Martinez | VIP | Active
+2 | Spring Student Showcase | Jordan Smith | General | Used
+1 | Spring Student Showcase | Maya Chen | VIP | Active
+3 | Sculpture Night | Priya Patel | Student | Active
+Total rows: 5
+
+Query 3: GROUP BY with aggregate
+Columns: event_name | total_tickets
+Alumni Curator Talk | 2
+Spring Student Showcase | 2
+Sculpture Night | 1
+Photography Open House | 0
+Total rows: 4
+
+Query 4: ORDER BY attendees alphabetically
+Columns: attendee_id | full_name | email
+5 | Ava Johnson | ava.johnson@example.com
+2 | Jordan Smith | jordan.smith@example.com
+4 | Leo Martinez | leo.martinez@example.com
+1 | Maya Chen | maya.chen@example.com
+3 | Priya Patel | priya.patel@example.com
+Total rows: 5
+
+Query 5: Subquery for above-average revenue events
+Average revenue across all events: 21.25
+Columns: event_name | total_revenue
+Spring Student Showcase | 40.00
+Alumni Curator Talk | 30.00
+Total rows: 2
+
+Query 6: INSERT example
+Result: INSERT 0 1
+Total rows affected: 1
+
+Query 7: UPDATE example
+Result: UPDATE 1
+Total rows affected: 1
+
+Query 8: DELETE example
+Result: DELETE 1
+Total rows affected: 1
+
+Query 9: Count active tickets by event using the view
+Columns: event_id | event_name | active_tickets
+4 | Alumni Curator Talk | 1
+2 | Sculpture Night | 1
+1 | Spring Student Showcase | 1
+3 | Photography Open House | 0
+Total rows: 4
+
+Query 10: Find attendees with VIP tickets
+Columns: full_name | email | event_name
+Leo Martinez | leo.martinez@example.com | Alumni Curator Talk
+Maya Chen | maya.chen@example.com | Spring Student Showcase
+Total rows: 2
+
+Query 11: Total revenue by event
+Columns: event_name | total_revenue
+Spring Student Showcase | 40.00
+Alumni Curator Talk | 30.00
+Sculpture Night | 15.00
+Photography Open House | 0.00
+Total rows: 4
